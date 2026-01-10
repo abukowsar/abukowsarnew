@@ -267,29 +267,70 @@ export default function About() {
               </div>
             </div>
 
-            {/* Core Strengths - Compact Layout */}
-            {/* <div className="p-6 rounded-2xl bg-gradient-to-br from-green-500/5 via-card to-card border border-border/50 hover:border-green-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-green-500/5">
+            {/* Action Buttons - Modern Concept */}
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-accent/5 via-card to-card border border-border/50 hover:border-accent/30 transition-all duration-300 hover:shadow-xl hover:shadow-accent/5">
               <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-lg">
-                  💪
+                <span className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-lg">
+                  🚀
                 </span>
-                Core Strengths
+                Let's Work Together
               </h3>
 
-              <div className="grid grid-cols-1 gap-3">
-                {coreStrengths.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 group p-3 rounded-lg hover:bg-green-500/5 transition-colors cursor-pointer"
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                      {item.text}
-                    </span>
+              <div className="space-y-4">
+                {/* Get Started Button */}
+                <button className="w-full group relative overflow-hidden bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl p-4 font-semibold hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-teal-500/25">
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="text-lg">🎯</span>
+                    <span>Get Started - It's Free</span>
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
                   </div>
-                ))}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                </button>
+
+                {/* Contact Sales Button */}
+                <button className="w-full group border-2 border-primary text-primary rounded-xl p-4 font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="text-lg">💼</span>
+                    <span>Contact Sales</span>
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
+                </button>
+
+                {/* Quick Actions */}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <button className="group flex items-center justify-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-lg font-medium transition-all hover:scale-105">
+                    <span className="text-sm">📞</span>
+                    <span className="text-sm">Call Now</span>
+                  </button>
+                  <button className="group flex items-center justify-center gap-2 p-3 bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700 rounded-lg font-medium transition-all hover:scale-105">
+                    <span className="text-sm">📧</span>
+                    <span className="text-sm">Email</span>
+                  </button>
+                </div>
+
+                {/* Trust Indicators */}
+                <div className="pt-4 border-t border-border/50">
+                  <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                      <span>Available Now</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-yellow-500">⭐</span>
+                      <span>5.0 Rating</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-blue-500">🛡️</span>
+                      <span>Certified PMP</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div> */}
+            </div>
           </div>
 
           {/* Right Column - Tabs */}

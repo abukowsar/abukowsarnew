@@ -2,7 +2,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Github, Download } from "lucide-react";
+import { ArrowLeft, ExternalLink, Github, Download, X, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import Header from "@/components/header";
 import ImageLightbox from "@/components/image-lightbox";
 import Footer from "@/components/footer";
 
@@ -26,6 +27,21 @@ export default function Portfolio() {
     imageSrc: "",
     imageAlt: "",
   });
+
+  const [fullscreenImage, setFullscreenImage] = useState<{
+    isOpen: boolean;
+    imageSrc: string;
+    imageAlt: string;
+  }>({
+    isOpen: false,
+    imageSrc: "",
+    imageAlt: "",
+  });
+
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const allProjects = [
     {
@@ -149,42 +165,84 @@ export default function Portfolio() {
     });
   };
 
+  const handleFullscreenImage = (imageSrc: string, imageAlt: string) => {
+    setFullscreenImage({
+      isOpen: true,
+      imageSrc,
+      imageAlt,
+    });
+  };
+
+  const handleCloseFullscreen = () => {
+    setFullscreenImage({
+      ...fullscreenImage,
+      isOpen: false,
+    });
+    // Reset zoom and position
+    setZoomLevel(1);
+    setImagePosition({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.5, 5));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.5, 0.5));
+  };
+
+  const handleResetZoom = () => {
+    setZoomLevel(1);
+    setImagePosition({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - imagePosition.x,
+        y: e.clientY - imagePosition.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && zoomLevel > 1) {
+      setImagePosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   return (
     <>
+      <Header />
       <div className="min-h-screen bg-background">
         {/* Header - Hero Style */}
         <div className="bg-gradient-to-br from-background via-background to-accent/5 py-20">
           <div className="max-w-6xl mx-auto px-4">
-            <Link 
-              href="/" 
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
+
             
             <div className="grid md:grid-cols-2 gap-12 items-center">
               {/* Left Side - Content */}
               <div className="space-y-8">
                 {/* Header Section */}
                 <div className="text-center md:text-left space-y-4">
-                  <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-                    Engr Abu Kowsar (PMP, PMI-ACP)
-                  </h1>
-                  <h2 className="text-4xl md:text-5xl font-bold text-accent leading-tight">
-                    My Portfolio
-                  </h2>
+                  <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
+                    <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                      Engr Abu Kowsar
+                    </h1>
+                    <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-semibold">PMP</span>
+                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-sm font-semibold">PMI-ACP</span>
+                  </div>
                 </div>
 
-                {/* Availability Section */}
-                <div className="flex justify-between items-center py-4">
-                  <div>
-                    <p className="text-lg font-semibold text-muted-foreground">Portfolio</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-semibold text-muted-foreground">Complete Collection</p>
-                  </div>
-                </div>
+
 
                 {/* Download Resume Button */}
                 <div className="w-full">
@@ -317,14 +375,22 @@ export default function Portfolio() {
                   key={index}
                   className="group bg-card border border-border rounded-xl overflow-hidden hover:border-accent transition-all hover:shadow-xl hover:shadow-accent/10 hover:-translate-y-2"
                 >
-                  <div className="relative h-48 bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden">
+                  <div className="relative h-48 bg-gradient-to-br from-accent/10 to-accent/5 overflow-hidden group/image">
                     <Image
                       src={project.image}
                       alt={project.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300 cursor-pointer"
-                      onClick={() => handleImageClick(project.image.src, project.title)}
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
                     />
+                    
+                    {/* Fullscreen Button */}
+                    <button
+                      onClick={() => handleFullscreenImage(project.image.src, project.title)}
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center opacity-0 group/image-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                    >
+                      <ZoomIn className="w-5 h-5" />
+                    </button>
+                    
                     <div className="absolute top-4 left-4">
                       <span className="px-3 py-1 bg-background/90 text-foreground rounded-full text-xs font-medium">
                         {project.category}
@@ -339,6 +405,9 @@ export default function Portfolio() {
                         {project.status}
                       </span>
                     </div>
+                    
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/0 group/image-hover:bg-black/20 transition-all duration-300"></div>
                   </div>
                   
                   <div className="p-6">
@@ -414,6 +483,97 @@ export default function Portfolio() {
         imageAlt={lightboxState.imageAlt}
         onClose={handleCloseLightbox}
       />
+
+      {/* Enhanced Fullscreen Image Modal with Zoom */}
+      {fullscreenImage.isOpen && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
+          {/* Close Button */}
+          <button
+            onClick={handleCloseFullscreen}
+            className="absolute top-4 right-4 z-60 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          
+          {/* Navigation Bar */}
+          <div className="absolute top-4 left-4 z-60 flex items-center gap-4">
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-300"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Back to Home</span>
+            </Link>
+            <div className="px-4 py-2 bg-white/10 text-white rounded-lg">
+              <span className="text-sm font-medium">{fullscreenImage.imageAlt}</span>
+            </div>
+          </div>
+
+          {/* Zoom Controls */}
+          <div className="absolute top-4 right-20 z-60 flex items-center gap-2">
+            <button
+              onClick={handleZoomOut}
+              className="w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              title="Zoom Out"
+            >
+              <ZoomOut className="w-5 h-5" />
+            </button>
+            <div className="px-3 py-2 bg-white/10 text-white rounded-lg text-sm font-medium min-w-[60px] text-center">
+              {Math.round(zoomLevel * 100)}%
+            </div>
+            <button
+              onClick={handleZoomIn}
+              className="w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              title="Zoom In"
+            >
+              <ZoomIn className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleResetZoom}
+              className="w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+              title="Reset Zoom"
+            >
+              <RotateCcw className="w-5 h-5" />
+            </button>
+          </div>
+          
+          {/* Image Container with Zoom and Pan */}
+          <div 
+            className="relative max-w-full max-h-full overflow-hidden cursor-move"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <Image
+              src={fullscreenImage.imageSrc}
+              alt={fullscreenImage.imageAlt}
+              width={1200}
+              height={800}
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-transform duration-200 select-none"
+              style={{
+                transform: `scale(${zoomLevel}) translate(${imagePosition.x / zoomLevel}px, ${imagePosition.y / zoomLevel}px)`,
+                cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default'
+              }}
+              draggable={false}
+            />
+          </div>
+          
+          {/* Enhanced Image Info */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-lg">
+            <p className="text-sm font-medium text-center">{fullscreenImage.imageAlt}</p>
+            <p className="text-xs text-white/70 text-center mt-1">
+              Use zoom controls • Drag to pan when zoomed • Click outside or press X to close
+            </p>
+          </div>
+          
+          {/* Click outside to close */}
+          <div 
+            className="absolute inset-0 -z-10" 
+            onClick={handleCloseFullscreen}
+          ></div>
+        </div>
+      )}
       
       <Footer />
     </>

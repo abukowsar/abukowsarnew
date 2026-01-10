@@ -1,3 +1,4 @@
+import Banner from "@/components/banner";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
 import Services from "@/components/services";
@@ -13,6 +14,7 @@ import Awards from "@/components/award";
 export default function Home() {
   return (
     <main className="min-h-screen bg-background transition-colors duration-300">
+      <Banner />
       <Header />
       <Hero />
       <Services />
